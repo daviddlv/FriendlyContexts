@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\FriendlyContexts\Guesser\GuesserManager;
 use Knp\FriendlyContexts\Utils\TextFormater;
 use Knp\FriendlyContexts\Utils\UniqueCache;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class EntityHydrator
 {

@@ -29,17 +29,25 @@ class EntityHydrator
             }
 
             try {
-                $reflProperty = new \ReflectionProperty($entity, $property);
-                $reflProperty->setAccessible(true);
-                $reflProperty->setValue($entity, $value);
+                PropertyAccess::createPropertyAccessor()
+                    ->setValue(
+                        $entity,
+                        $this->formater->toCamelCase($property),
+                        $value
+                    )
+                ;
             } catch (\Exception $e) {
                 if (!($value instanceof ArrayCollection)) {
                     throw $e;
                 }
 
-                $reflProperty = new \ReflectionProperty($entity, $property);
-                $reflProperty->setAccessible(true);
-                $reflProperty->setValue($entity, $value->toArray());
+                PropertyAccess::createPropertyAccessor()
+                    ->setValue(
+                        $entity,
+                        $this->formater->toCamelCase($property),
+                        $value->toArray()
+                    )
+                ;
             }
         }
 
@@ -113,8 +121,8 @@ class EntityHydrator
                 function ($e) use ($mapping) {
                     return $this->format($mapping, $e);
                 },
-                    $this->formater->listToArray($value)
-                );
+                $this->formater->listToArray($value)
+            );
 
             $value = $collectionRelation ? new ArrayCollection($result) : $result;
         } else {

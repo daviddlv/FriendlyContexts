@@ -34,14 +34,14 @@ class EntityContext extends Context
 
             $this
                 ->getEntityHydrator()
-                ->hydrate($this->getEntityManager(), $entity, $values)
-                ->completeRequired($this->getEntityManager(), $entity)
+                ->hydrate($this->getEntityManagerForClass($entityName), $entity, $values)
+                ->completeRequired($this->getEntityManagerForClass($entityName), $entity)
             ;
 
-            $this->getEntityManager()->persist($entity);
+            $this->getEntityManagerForClass($entityName)->persist($entity);
         }
 
-        $this->getEntityManager()->flush();
+        $this->getEntityManagerForClass($entityName)->flush();
     }
 
     /**
@@ -60,13 +60,13 @@ class EntityContext extends Context
             ;
             $this
                 ->getEntityHydrator()
-                ->completeRequired($this->getEntityManager(), $entity)
+                ->completeRequired($this->getEntityManagerForClass($entityName), $entity)
             ;
 
-            $this->getEntityManager()->persist($entity);
+            $this->getEntityManagerForClass($entityName)->persist($entity);
         }
 
-        $this->getEntityManager()->flush();
+        $this->getEntityManagerForClass($entityName)->flush();
     }
 
     /**
@@ -90,14 +90,14 @@ class EntityContext extends Context
             ;
             $this
                 ->getEntityHydrator()
-                ->hydrate($this->getEntityManager(), $entity, $values)
-                ->completeRequired($this->getEntityManager(), $entity)
+                ->hydrate($this->getEntityManagerForClass($entityName), $entity, $values)
+                ->completeRequired($this->getEntityManagerForClass($entityName), $entity)
             ;
 
-            $this->getEntityManager()->persist($entity);
+            $this->getEntityManagerForClass($entityName)->persist($entity);
         }
 
-        $this->getEntityManager()->flush();
+        $this->getEntityManagerForClass($entityName)->flush();
     }
 
     /**
@@ -115,7 +115,7 @@ class EntityContext extends Context
 
         $records = array_map(function ($e) { return $e->getEntity(); }, $collection->all());
         $entities = $this
-            ->getEntityManager()
+            ->getEntityManagerForClass($entityName)
             ->getRepository($entityName)
             ->createQueryBuilder('o')
             ->resetDQLParts()
@@ -159,14 +159,14 @@ class EntityContext extends Context
             $row = $rows[$i % count($rows)];
 
             $values = array_map(array($this, 'clean'), array_combine($headers, $row));
-            $object = $this->getEntityManager()
+            $object = $this->getEntityManagerForClass($entityName)
                 ->getRepository($entityName)
                 ->findOneBy($values);
 
             if (is_null($object)) {
                 throw new \Exception(sprintf("There is no object for the following criteria: %s", json_encode($values)));
             }
-            $this->getEntityManager()->refresh($object);
+            $this->getEntityManagerForClass($entityName)->refresh($object);
         }
     }
 

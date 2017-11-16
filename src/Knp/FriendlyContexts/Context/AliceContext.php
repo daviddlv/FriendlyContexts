@@ -40,11 +40,11 @@ class AliceContext extends Context
             if (in_array($id, $files)) {
                 foreach ($loader->load($fixture) as $object) {
                     if (in_array(get_class($object), $persistable)) {
-                        $this->getEntityManager()->persist($object);
+                        $this->getEntityManagerForClass(get_class($object))->persist($object);
                     }
                 }
 
-                $this->getEntityManager()->flush();
+                $this->getEntityManagerForClass(get_class($object))->flush();
             }
         }
     }

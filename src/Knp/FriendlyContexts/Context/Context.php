@@ -73,6 +73,11 @@ abstract class Context implements ContextInterface
         return $this->get('doctrine')->getManager();
     }
 
+    protected function getEntityManagerForClass($className)
+    {
+        return $this->get('doctrine')->getManagerForClass($className);
+    }
+
     protected function getUniqueCache()
     {
         return $this->get('friendly.unique_cache');

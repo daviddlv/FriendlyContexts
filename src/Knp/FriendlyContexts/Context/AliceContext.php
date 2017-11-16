@@ -52,14 +52,17 @@ class AliceContext extends Context
     private function getPersistableClasses()
     {
         $persistable = array();
-        $metadatas   = $this->getEntityManager()->getMetadataFactory()->getAllMetadata();
 
-        foreach ($metadatas as $metadata) {
-            if (isset($metadata->isEmbeddedClass) && $metadata->isEmbeddedClass) {
-                continue;
+        foreach ($this->get('doctrine')->getManagers() as $entityManager) {
+            $metadatas = $entityManager->getMetadataFactory()->getAllMetadata();
+
+            foreach ($metadatas as $metadata) {
+                if (isset($metadata->isEmbeddedClass) && $metadata->isEmbeddedClass) {
+                    continue;
+                }
+
+                $persistable[] = $metadata->getName();
             }
-
-            $persistable[] = $metadata->getName();
         }
 
         return $persistable;

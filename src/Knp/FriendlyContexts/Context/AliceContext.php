@@ -2,6 +2,8 @@
 
 namespace Knp\FriendlyContexts\Context;
 
+use Doctrine\Common\Persistence\ObjectManager;
+
 class AliceContext extends Context
 {
     /**
@@ -40,13 +42,18 @@ class AliceContext extends Context
             if (in_array($id, $files)) {
                 foreach ($loader->load($fixture) as $object) {
                     if (in_array(get_class($object), $persistable)) {
-                        $this->getEntityManagerForClass(get_class($object))->persist($object);
+                        $this->persistObject($this->getEntityManagerForClass(get_class($object)), $object);
                     }
                 }
 
                 $this->getEntityManagerForClass(get_class($object))->flush();
             }
         }
+    }
+
+    protected function persistObject(ObjectManager $manager, $object)
+    {
+        $manager->persist($object);
     }
 
     private function getPersistableClasses()
